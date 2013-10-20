@@ -33,6 +33,7 @@ class hsApp : public ofBaseApp
 	vector <float> voice1;
 	vector <float> voice2;
 	vector <float> voice3;
+	vector <vector<float>* > voices;
 	
 	float 	frequency;
 	float 	targetFrequency;

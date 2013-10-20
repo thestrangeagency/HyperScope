@@ -28,7 +28,7 @@ void hsApp::setup()
 	
 	// 2 output channels,
 	// 0 input channels
-	// 22050 samples per second
+	// 44100 samples per second
 	// 512 samples per buffer
 	// 4 num buffers (latency)
 	
@@ -45,6 +45,10 @@ void hsApp::setup()
 	voice2.assign(bufferSize, 0.0);
 	voice3.assign(bufferSize, 0.0);
 	
+	voices.push_back(&voice1);
+	voices.push_back(&voice2);
+	voices.push_back(&voice3);
+		
 	frequency = targetFrequency = 0;
 	numerator1 = numerator2 = 2;
 	denominator1 = denominator2 = 3;
@@ -106,83 +110,42 @@ void hsApp::draw()
 	ofDrawBitmapString("press 'i/o' to to modify second numerator, press 'k/l' to modify second denominator", 32, 92+24);
 	
 	ofNoFill();
+
+	// draw voices
 	
-	// draw voice 1
 	ofPushStyle();
 	ofPushMatrix();
 	ofTranslate(32, 150, 0);
 	
-	ofSetColor(225);
-	ofDrawBitmapString("Voice 1", 4, 18);
-	
-	ofSetLineWidth(1);
-	ofRect(0, 0, W, 100);
-	
-	ofSetColor(245, 58, 135);
-	ofSetLineWidth(1);
-	
-	ofBeginShape();
-	for (unsigned int i = 0; i < voice1.size(); i++)
+	for(vector<float>::size_type i = 0; i != voices.size(); i++)
 	{
-		float x =  ofMap(i, 0, voice1.size(), 0, W, true);
-		ofVertex(x, 50 -voice1[i]*80.0f);
+		vector<float> voice = *voices[i];
+		
+		ofSetColor(225);
+		ofDrawBitmapString("Voice " + ofToString(i+1), 4, 18);
+		
+		ofSetLineWidth(1);
+		ofRect(0, 0, W, H);
+		
+		ofSetColor(245, 58, 135);
+		ofSetLineWidth(1);
+		
+		ofBeginShape();
+		for (unsigned int j = 0; j < voice.size(); j++)
+		{
+			float x = ofMap(j, 0, voice.size(), 0, W, true);
+			ofVertex(x, H/2 - voice[j]*80.0f);
+		}
+		ofEndShape(false);
+		
+		ofTranslate(0, H, 0);
 	}
-	ofEndShape(false);
-	
-	ofPopMatrix();
-	ofPopStyle();
-	
-	// draw voice 2
-	ofPushStyle();
-	ofPushMatrix();
-	ofTranslate(32, 250, 0);
-	
-	ofSetColor(225);
-	ofDrawBitmapString("Voice 2", 4, 18);
-	
-	ofSetLineWidth(1);
-	ofRect(0, 0, W, 100);
-	
-	ofSetColor(245, 58, 135);
-	ofSetLineWidth(1);
-	
-	ofBeginShape();
-	for (unsigned int i = 0; i < voice2.size(); i++)
-	{
-		float x =  ofMap(i, 0, voice2.size(), 0, W, true);
-		ofVertex(x, 50 -voice2[i]*80.0f);
-	}
-	ofEndShape(false);
-	
-	ofPopMatrix();
-	ofPopStyle();
-	
-	// draw voice 3
-	ofPushStyle();
-	ofPushMatrix();
-	ofTranslate(32, 350, 0);
-	
-	ofSetColor(225);
-	ofDrawBitmapString("Voice 3", 4, 18);
-	
-	ofSetLineWidth(1);
-	ofRect(0, 0, W, 100);
-	
-	ofSetColor(245, 58, 135);
-	ofSetLineWidth(1);
-	
-	ofBeginShape();
-	for (unsigned int i = 0; i < voice3.size(); i++)
-	{
-		float x =  ofMap(i, 0, voice3.size(), 0, W, true);
-		ofVertex(x, 50 -voice3[i]*80.0f);
-	}
-	ofEndShape(false);
 	
 	ofPopMatrix();
 	ofPopStyle();
 	
 	// draw output
+	
 	ofPushStyle();
 	ofPushMatrix();
 	ofTranslate(32, 450, 0);
