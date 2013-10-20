@@ -7,7 +7,7 @@ void hsApp::setup()
 	ofSetVerticalSync(true);
 	
 	widthi = 512;
-	widthf = 512.f;
+	widthf = widthi;
 	
 	mesh.setMode(OF_PRIMITIVE_POINTS);
 	
@@ -81,9 +81,9 @@ void hsApp::draw()
 	{
 		int j = ofMap(i, 0, verts.size(), 0, widthf);
 		
-		verts[i].x = voice1[j] * widthf * 2.f;
-		verts[i].y = voice2[j] * widthf * 2.f;
-		verts[i].z = voice3[j] * widthf * 2.f;
+		verts[i].x = voice1[j] * W;
+		verts[i].y = voice2[j] * W;
+		verts[i].z = voice3[j] * W;
 		
 		color[i].r = 1.f - voice1[j];
 		color[i].g = 1.f - voice2[j];
@@ -209,7 +209,7 @@ void hsApp::draw()
 	
 	
 	ofSetColor(225);
-	string reportString = "volume: ("+ofToString(volume, 2)+") modify with -/+ keys\npan: ("+ofToString(pan, 2)+") modify with mouse x\nsynthesis: ";
+	string reportString = "volume: ("+ofToString(volume, 2)+") modify with -/+ keys";//\npan: ("+ofToString(pan, 2)+") modify with mouse x\nsynthesis: ";
 	if( !bNoise )
 	{
 		reportString += "sine wave (" + ofToString(frequency, 2) + " > " + ofToString(targetFrequency, 2) + "hz) modify with mouse y";
