@@ -97,54 +97,106 @@ void hsApp::draw()
 	
 	ofSetColor(225);
 	ofDrawBitmapString("AUDIO OUTPUT EXAMPLE", 32, 32);
-	ofDrawBitmapString("press 's' to unpause the audio\npress 'e' to pause the audio", 31, 92);
+	ofDrawBitmapString("press 'z' to unpause the audio, press 'x' to pause the audio", 32, 92);
+	ofDrawBitmapString("press 'q/w' to to modify first numerator, press 'a/s' to modify first denominator", 32, 92+12);
+	ofDrawBitmapString("press 'i/o' to to modify second numerator, press 'k/l' to modify second denominator", 32, 92+24);
 	
 	ofNoFill();
 	
-	// draw the left channel:
+	// draw voice 1
 	ofPushStyle();
 	ofPushMatrix();
 	ofTranslate(32, 150, 0);
 	
 	ofSetColor(225);
-	ofDrawBitmapString("Left Channel", 4, 18);
+	ofDrawBitmapString("Voice 1", 4, 18);
 	
 	ofSetLineWidth(1);
-	ofRect(0, 0, 900, 200);
+	ofRect(0, 0, 900, 100);
 	
 	ofSetColor(245, 58, 135);
-	ofSetLineWidth(3);
+	ofSetLineWidth(1);
 	
 	ofBeginShape();
 	for (unsigned int i = 0; i < voice1.size(); i++)
 	{
 		float x =  ofMap(i, 0, voice1.size(), 0, 900, true);
-		ofVertex(x, 100 -voice1[i]*180.0f);
+		ofVertex(x, 50 -voice1[i]*80.0f);
 	}
 	ofEndShape(false);
 	
 	ofPopMatrix();
 	ofPopStyle();
 	
-	// draw the right channel:
+	// draw voice 2
 	ofPushStyle();
 	ofPushMatrix();
-	ofTranslate(32, 350, 0);
+	ofTranslate(32, 250, 0);
 	
 	ofSetColor(225);
-	ofDrawBitmapString("Right Channel", 4, 18);
+	ofDrawBitmapString("Voice 2", 4, 18);
 	
 	ofSetLineWidth(1);
-	ofRect(0, 0, 900, 200);
+	ofRect(0, 0, 900, 100);
 	
 	ofSetColor(245, 58, 135);
-	ofSetLineWidth(3);
+	ofSetLineWidth(1);
 	
 	ofBeginShape();
 	for (unsigned int i = 0; i < voice2.size(); i++)
 	{
 		float x =  ofMap(i, 0, voice2.size(), 0, 900, true);
-		ofVertex(x, 100 -voice2[i]*180.0f);
+		ofVertex(x, 50 -voice2[i]*80.0f);
+	}
+	ofEndShape(false);
+	
+	ofPopMatrix();
+	ofPopStyle();
+	
+	// draw voice 3
+	ofPushStyle();
+	ofPushMatrix();
+	ofTranslate(32, 350, 0);
+	
+	ofSetColor(225);
+	ofDrawBitmapString("Voice 3", 4, 18);
+	
+	ofSetLineWidth(1);
+	ofRect(0, 0, 900, 100);
+	
+	ofSetColor(245, 58, 135);
+	ofSetLineWidth(1);
+	
+	ofBeginShape();
+	for (unsigned int i = 0; i < voice3.size(); i++)
+	{
+		float x =  ofMap(i, 0, voice3.size(), 0, 900, true);
+		ofVertex(x, 50 -voice3[i]*80.0f);
+	}
+	ofEndShape(false);
+	
+	ofPopMatrix();
+	ofPopStyle();
+	
+	// draw output
+	ofPushStyle();
+	ofPushMatrix();
+	ofTranslate(32, 450, 0);
+	
+	ofSetColor(225);
+	ofDrawBitmapString("Output", 4, 18);
+	
+	ofSetLineWidth(1);
+	ofRect(0, 0, 900, 100);
+	
+	ofSetColor(245, 58, 135);
+	ofSetLineWidth(1);
+	
+	ofBeginShape();
+	for (unsigned int i = 0; i < voice3.size(); i++)
+	{
+		float x =  ofMap(i, 0, voice3.size(), 0, 900, true);
+		ofVertex(x, 50 -(voice1[i]+voice2[i]+voice3[i])*80.0f);
 	}
 	ofEndShape(false);
 	
@@ -182,12 +234,12 @@ void hsApp::keyPressed  (int key)
 		volume = MIN(volume, 1);
 	}
 	
-	if( key == 's' )
+	if( key == 'z' )
 	{
 		soundStream.start();
 	}
 	
-	if( key == 'e' )
+	if( key == 'x' )
 	{
 		soundStream.stop();
 	}
