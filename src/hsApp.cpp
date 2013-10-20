@@ -71,6 +71,9 @@ void hsApp::draw()
 {
 	ofBackgroundGradient(ofColor::gray, ofColor::black, OF_GRADIENT_CIRCULAR);
 	
+	int W = (ofGetWidth()-64.f)/2.f;
+	int H = 100;
+	
 	vector<ofVec3f>& verts = mesh.getVertices();
 	vector<ofFloatColor>& color = mesh.getColors();
 	
@@ -78,9 +81,9 @@ void hsApp::draw()
 	{
 		int j = ofMap(i, 0, verts.size(), 0, widthf);
 		
-		verts[i].x = voice1[j] * widthf;
-		verts[i].y = voice2[j] * widthf;
-		verts[i].z = voice3[j] * widthf;
+		verts[i].x = voice1[j] * widthf * 2.f;
+		verts[i].y = voice2[j] * widthf * 2.f;
+		verts[i].z = voice3[j] * widthf * 2.f;
 		
 		color[i].r = 1.f - voice1[j];
 		color[i].g = 1.f - voice2[j];
@@ -88,6 +91,7 @@ void hsApp::draw()
 	}
 	
 	cam.begin();
+	ofTranslate(W/2, 0);
 	ofRotateY(rotator);
 	rotator += 0.1f;
 	mesh.draw();
@@ -112,7 +116,7 @@ void hsApp::draw()
 	ofDrawBitmapString("Voice 1", 4, 18);
 	
 	ofSetLineWidth(1);
-	ofRect(0, 0, 900, 100);
+	ofRect(0, 0, W, 100);
 	
 	ofSetColor(245, 58, 135);
 	ofSetLineWidth(1);
@@ -120,7 +124,7 @@ void hsApp::draw()
 	ofBeginShape();
 	for (unsigned int i = 0; i < voice1.size(); i++)
 	{
-		float x =  ofMap(i, 0, voice1.size(), 0, 900, true);
+		float x =  ofMap(i, 0, voice1.size(), 0, W, true);
 		ofVertex(x, 50 -voice1[i]*80.0f);
 	}
 	ofEndShape(false);
@@ -137,7 +141,7 @@ void hsApp::draw()
 	ofDrawBitmapString("Voice 2", 4, 18);
 	
 	ofSetLineWidth(1);
-	ofRect(0, 0, 900, 100);
+	ofRect(0, 0, W, 100);
 	
 	ofSetColor(245, 58, 135);
 	ofSetLineWidth(1);
@@ -145,7 +149,7 @@ void hsApp::draw()
 	ofBeginShape();
 	for (unsigned int i = 0; i < voice2.size(); i++)
 	{
-		float x =  ofMap(i, 0, voice2.size(), 0, 900, true);
+		float x =  ofMap(i, 0, voice2.size(), 0, W, true);
 		ofVertex(x, 50 -voice2[i]*80.0f);
 	}
 	ofEndShape(false);
@@ -162,7 +166,7 @@ void hsApp::draw()
 	ofDrawBitmapString("Voice 3", 4, 18);
 	
 	ofSetLineWidth(1);
-	ofRect(0, 0, 900, 100);
+	ofRect(0, 0, W, 100);
 	
 	ofSetColor(245, 58, 135);
 	ofSetLineWidth(1);
@@ -170,7 +174,7 @@ void hsApp::draw()
 	ofBeginShape();
 	for (unsigned int i = 0; i < voice3.size(); i++)
 	{
-		float x =  ofMap(i, 0, voice3.size(), 0, 900, true);
+		float x =  ofMap(i, 0, voice3.size(), 0, W, true);
 		ofVertex(x, 50 -voice3[i]*80.0f);
 	}
 	ofEndShape(false);
@@ -187,7 +191,7 @@ void hsApp::draw()
 	ofDrawBitmapString("Output", 4, 18);
 	
 	ofSetLineWidth(1);
-	ofRect(0, 0, 900, 100);
+	ofRect(0, 0, W, 100);
 	
 	ofSetColor(245, 58, 135);
 	ofSetLineWidth(1);
@@ -195,7 +199,7 @@ void hsApp::draw()
 	ofBeginShape();
 	for (unsigned int i = 0; i < voice3.size(); i++)
 	{
-		float x =  ofMap(i, 0, voice3.size(), 0, 900, true);
+		float x =  ofMap(i, 0, voice3.size(), 0, W, true);
 		ofVertex(x, 50 -(voice1[i]+voice2[i]+voice3[i])*80.0f);
 	}
 	ofEndShape(false);
