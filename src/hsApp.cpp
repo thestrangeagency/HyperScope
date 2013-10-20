@@ -15,16 +15,16 @@ void hsApp::setup()
 	{
 		for(int x = 0; x < widthi; x++ )
 		{
-			ofColor color(12,150,255,255);
+			ofFloatColor color(x/widthf,y/widthf,1.f,1.f);
 			mesh.addColor(color);
-			ofVec3f pos(0, 0, 0);
+			ofVec3f pos(x-widthf/2.f, y-widthf/2.f, 0);
 			mesh.addVertex(pos);
 		}
 	}
 	
 	ofEnableDepthTest();
 	glEnable(GL_POINT_SMOOTH); // use circular points instead of square points
-	glPointSize(3); // make the points bigger
+	glPointSize(1); // make the points bigger
 	
 	// 2 output channels,
 	// 0 input channels
@@ -82,22 +82,18 @@ void hsApp::draw()
 		verts[i].y = voice2[j] * widthf;
 		verts[i].z = voice3[j] * widthf;
 		
-		//color[i].r = 128.f + voice1[j] * 127.f;
-		//color[i].g = 128.f + voice2[j] * 127.f;
+		color[i].r = 1.f - voice1[j];
+		color[i].g = 1.f - voice2[j];
+		color[i].b = 1.f - voice3[j];
 	}
 	
-	// even points can overlap with each other, let's avoid that
 	cam.begin();
-	//ofScale(2, -2, 2); // flip the y axis and zoom in a bit
 	ofRotateY(rotator);
-	rotator += 1.f;
-	//ofTranslate(ofGetHeight() / 2, ofGetHeight() / 2);
+	rotator += 0.1f;
 	mesh.draw();
 	cam.end();
 	
-	
 	//
-	
 	
 	ofSetColor(225);
 	ofDrawBitmapString("AUDIO OUTPUT EXAMPLE", 32, 32);
