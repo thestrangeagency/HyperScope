@@ -37,11 +37,14 @@ class hsApp : public ofBaseApp
 	
 	float 	frequency;
 	float 	targetFrequency;
+	float 	phaseAdder;
 	float 	phase1;
 	float 	phase2;
 	float 	phase3;
-	float 	phaseAdder;
-	
+	int		shape1;
+	int		shape2;
+	int		shape3;
+
 	int		numerator1;
 	int		denominator1;
 	int		numerator2;

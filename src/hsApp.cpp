@@ -24,7 +24,7 @@ void hsApp::setup()
 	
 	ofEnableDepthTest();
 	glEnable(GL_POINT_SMOOTH); // use circular points instead of square points
-	glPointSize(1); // make the points bigger
+	glPointSize(2); // make the points bigger
 	
 	// 2 output channels,
 	// 0 input channels
@@ -37,8 +37,11 @@ void hsApp::setup()
 	phase1				= 0;
 	phase2				= 0;
 	phase3				= 0;
+	shape1				= 0;
+	shape2				= 0;
+	shape3				= 0;
 	phaseAdder 			= 0.0f;
-	volume				= 0.1f;
+	volume				= 0.2f;
 	bNoise 				= false;
 	
 	voice1.assign(bufferSize, 0.0);
@@ -49,7 +52,7 @@ void hsApp::setup()
 	voices.push_back(&voice2);
 	voices.push_back(&voice3);
 		
-	frequency = targetFrequency = 0;
+	frequency = targetFrequency = 110;
 	numerator1 = numerator2 = 2;
 	denominator1 = denominator2 = 3;
 	rotator = 0;
@@ -276,6 +279,24 @@ void hsApp::keyPressed  (int key)
 		denominator2++;
 	}
 	
+	int N_SHAPES = 3;
+	
+	if( key == 'e' )
+	{
+		shape1 = (shape1 + 1) % N_SHAPES;
+	}
+	
+	if( key == 'd' )
+	{
+		shape2 = (shape2 + 1) % N_SHAPES;
+	}
+	
+	if( key == 'c' )
+	{
+		shape3 = (shape3 + 1) % N_SHAPES;
+	}
+	
+	
 }
 
 //--------------------------------------------------------------
@@ -356,10 +377,22 @@ void hsApp::audioOut(float * output, int bufferSize, int nChannels)
 			phase2 += phaseAdder*float(numerator1)/float(denominator1);
 			phase3 += (phaseAdder*float(numerator1)/float(denominator1))*float(numerator2)/float(denominator2);
 			
+			// sine wave
 			float sample1 = sin(phase1);
 			float sample2 = sin(phase2);
 			float sample3 = sin(phase3);
 			
+			// square wave
+			if( shape1 == 1 ) sample1 = sample1 > 0 ? 1 : -1;
+			if( shape2 == 1 ) sample2 = sample2 > 0 ? 1 : -1;
+			if( shape3 == 1 ) sample3 = sample3 > 0 ? 1 : -1;
+			
+			// sawtooth wave
+			if( shape1 == 2 ) sample1 = (fmodf(phase1,TWO_PI) - PI)/2.f;
+			if( shape2 == 2 ) sample2 = (fmodf(phase2,TWO_PI) - PI)/2.f;
+			if( shape3 == 2 ) sample3 = (fmodf(phase3,TWO_PI) - PI)/2.f;
+			
+			// scale by volume
 			voice1[i] = sample1 * volume;
 			voice2[i] = sample2 * volume;
 			voice3[i] = sample3 * volume;
