@@ -34,12 +34,19 @@ void hsApp::setup()
 	
 	int bufferSize		= 512;
 	sampleRate 			= 44100;
+	
 	phase1				= 0;
 	phase2				= 0;
 	phase3				= 0;
+	
 	shape1				= 0;
 	shape2				= 0;
 	shape3				= 0;
+	
+	freeze1				= 0;
+	freeze2				= 0;
+	freeze3				= 0;
+	
 	phaseAdder 			= 0.0f;
 	volume				= 0.2f;
 	bNoise 				= false;
@@ -285,17 +292,27 @@ void hsApp::keyPressed  (int key)
 	{
 		shape1 = (shape1 + 1) % N_SHAPES;
 	}
-	
 	if( key == 'd' )
 	{
 		shape2 = (shape2 + 1) % N_SHAPES;
 	}
-	
 	if( key == 'c' )
 	{
 		shape3 = (shape3 + 1) % N_SHAPES;
 	}
 	
+	if( key == 'r' )
+	{
+		freeze1 = freeze1 ? 0 : 1;
+	}
+	if( key == 'f' )
+	{
+		freeze2 = freeze2 ? 0 : 1;
+	}
+	if( key == 'v' )
+	{
+		freeze3 = freeze3 ? 0 : 1;
+	}
 	
 }
 
@@ -373,9 +390,9 @@ void hsApp::audioOut(float * output, int bufferSize, int nChannels)
 		
 		for (int i = 0; i < bufferSize; i++)
 		{
-			phase1 += phaseAdder;
-			phase2 += phaseAdder*float(numerator1)/float(denominator1);
-			phase3 += (phaseAdder*float(numerator1)/float(denominator1))*float(numerator2)/float(denominator2);
+			phase1 += freeze1 ? 0 : phaseAdder;
+			phase2 += freeze2 ? 0 : phaseAdder*float(numerator1)/float(denominator1);
+			phase3 += freeze3 ? 0 : (phaseAdder*float(numerator1)/float(denominator1))*float(numerator2)/float(denominator2);
 			
 			// sine wave
 			float sample1 = sin(phase1);
