@@ -15,7 +15,7 @@ void hsApp::setup()
 	{
 		for(int x = 0; x < widthi; x++ )
 		{
-			ofFloatColor color(x/widthf,y/widthf,1.f,1.f);
+			ofFloatColor color(x/widthf,y/widthf,1.f,0.5f);
 			mesh.addColor(color);
 			ofVec3f pos(x-widthf/2.f, y-widthf/2.f, 0);
 			mesh.addVertex(pos);
@@ -73,7 +73,7 @@ void hsApp::update()
 //--------------------------------------------------------------
 void hsApp::draw()
 {
-	ofBackgroundGradient(ofColor::gray, ofColor::black, OF_GRADIENT_CIRCULAR);
+	ofBackground(34, 34, 34);
 	
 	int W = (ofGetWidth()-64.f)/2.f;
 	int H = 100;
@@ -94,17 +94,18 @@ void hsApp::draw()
 		color[i].b = 1.f - voice3[j];
 	}
 	
-	cam.begin();
-	ofTranslate(W/2, 0);
-	ofRotateY(rotator);
+	ofPushMatrix();
+	ofTranslate(32+W/2+ofGetWidth()/2, 450, 0);
+	ofRotateY(pan*360);
+	ofRotateX(rotator);
 	rotator += 0.1f;
 	mesh.draw();
-	cam.end();
+	ofPopMatrix();
 	
 	//
 	
 	ofSetColor(225);
-	ofDrawBitmapString("AUDIO OUTPUT EXAMPLE", 32, 32);
+	ofDrawBitmapString("HyperScope", 32, 32);
 	ofDrawBitmapString("press 'z' to unpause the audio, press 'x' to pause the audio", 32, 92);
 	ofDrawBitmapString("press 'q/w' to to modify first numerator, press 'a/s' to modify first denominator", 32, 92+12);
 	ofDrawBitmapString("press 'i/o' to to modify second numerator, press 'k/l' to modify second denominator", 32, 92+24);
@@ -128,8 +129,6 @@ void hsApp::draw()
 		ofRect(0, 0, W, H);
 		
 		ofSetColor(245, 58, 135);
-		ofSetLineWidth(1);
-		
 		ofBeginShape();
 		for (unsigned int j = 0; j < voice.size(); j++)
 		{
@@ -170,9 +169,31 @@ void hsApp::draw()
 	ofPopMatrix();
 	ofPopStyle();
 	
+	// again
+	
+	ofPushStyle();
+	ofPushMatrix();
+	ofTranslate(32+W/2+ofGetWidth()/2, 250, 0);
+	ofRotateY(pan*360);
+	ofRotateX(rotator);
+	
+	ofSetColor(245, 58, 135);
+	ofSetLineWidth(1);
+	
+	ofBeginShape();
+	for (unsigned int i = 0; i < voice3.size(); i++)
+	{
+		ofVertex(voice1[i]*W, voice2[i]*W, voice3[i]*W);
+	}
+	ofEndShape(false);
+	
+	ofPopMatrix();
+	ofPopStyle();
+	
+	// draw info
 	
 	ofSetColor(225);
-	string reportString = "volume: ("+ofToString(volume, 2)+") modify with -/+ keys";//\npan: ("+ofToString(pan, 2)+") modify with mouse x\nsynthesis: ";
+	string reportString = "volume: ("+ofToString(volume, 2)+") modify with -/+ keys\n";//pan: ("+ofToString(pan, 2)+") modify with mouse x\nsynthesis: ";
 	if( !bNoise )
 	{
 		reportString += "sine wave (" + ofToString(frequency, 2) + " > " + ofToString(targetFrequency, 2) + "hz) modify with mouse y";
