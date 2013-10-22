@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxFft.h"
 
 class hsApp : public ofBaseApp
 {
@@ -61,4 +62,14 @@ class hsApp : public ofBaseApp
 	
 	ofEasyCam cam;
 	ofMesh mesh;
+	
+	//
+	
+	void plot(vector<float>& buffer, float scale, float offset);
+	int plotHeight;
+	
+	ofxFft* fft;
+	
+	ofMutex soundMutex;
+	vector<float> drawBins, middleBins, audioBins;
 };

@@ -71,7 +71,18 @@ void hsApp::setup()
 	
 	soundStream.setup(this, 2, 0, sampleRate, bufferSize, 4);
 	
-	ofSetFrameRate(60);
+	//
+	
+	plotHeight = 100;
+	
+	//fft = ofxFft::create(bufferSize, OF_FFT_WINDOW_HAMMING, OF_FFT_FFTW);
+	fft = ofxFft::create(bufferSize, OF_FFT_WINDOW_HAMMING);
+	
+	drawBins.resize(fft->getBinSize());
+	middleBins.resize(fft->getBinSize());
+	audioBins.resize(fft->getBinSize());
+	
+	ofSetFrameRate(30);
 }
 
 
@@ -215,8 +226,39 @@ void hsApp::draw()
 	reportString += "\nratios = " + ofToString(numerator1) + ":" + ofToString(denominator1) + ", " + ofToString(numerator2) + ":" + ofToString(denominator2);
 	ofDrawBitmapString(reportString, 32, 579);
 	
+	// fft
+	
+	ofSetColor(255);
+	ofPushMatrix();
+	ofTranslate(ofGetHeight() - 116, 16);
+	
+	soundMutex.lock();
+	drawBins = middleBins;
+	soundMutex.unlock();
+	
+	ofDrawBitmapString("Frequency Domain", 0, 0);
+	plot(drawBins, -plotHeight, plotHeight / 2);
+	ofPopMatrix();
+	//string msg = ofToString((int) ofGetFrameRate()) + " fps";
+	//ofDrawBitmapString(msg, ofGetWidth() - 80, ofGetHeight() - 20);
 }
 
+//--------------------------------------------------------------
+void hsApp::plot(vector<float>& buffer, float scale, float offset)
+{
+	ofNoFill();
+	int n = buffer.size()/2;
+	ofRect(0, 0, n, plotHeight);
+	glPushMatrix();
+	glTranslatef(0, plotHeight / 2 + offset, 0);
+	ofBeginShape();
+	for (int i = 0; i < n; i++)
+	{
+		ofVertex(i, sqrt(buffer[i]) * scale);
+	}
+	ofEndShape();
+	glPopMatrix();
+}
 
 //--------------------------------------------------------------
 void hsApp::keyPressed  (int key)
@@ -418,6 +460,16 @@ void hsApp::audioOut(float * output, int bufferSize, int nChannels)
 		}
 	}
 	
+	// fft
+
+	fft->setSignal(output);
+	
+	float* curFft = fft->getAmplitude();
+	memcpy(&audioBins[0], curFft, sizeof(float) * fft->getBinSize());
+		
+	soundMutex.lock();
+	middleBins = audioBins;
+	soundMutex.unlock();	
 }
 
 //--------------------------------------------------------------
