@@ -128,8 +128,6 @@ void hsApp::draw()
 	ofSetColor(225);
 	ofDrawBitmapString("HyperScope", 32, 32);
 	ofDrawBitmapString("press 'z' to unpause the audio, press 'x' to pause the audio", 32, 92);
-	ofDrawBitmapString("press 'q/w' to to modify first numerator, press 'a/s' to modify first denominator", 32, 92+12);
-	ofDrawBitmapString("press 'i/o' to to modify second numerator, press 'k/l' to modify second denominator", 32, 92+24);
 	
 	ofNoFill();
 
@@ -224,13 +222,18 @@ void hsApp::draw()
 		reportString += "noise";
 	}
 	reportString += "\nratios = " + ofToString(numerator1) + ":" + ofToString(denominator1) + ", " + ofToString(numerator2) + ":" + ofToString(denominator2);
+	
+	reportString += "\nchange ratios: 'q/a':'w/s', 'e/d':'r/f'";
+	reportString += "\nchange waveforms: 'y/h/n'";
+	reportString += "\nfreeze waveforms: 'u/j/m'";
+	
 	ofDrawBitmapString(reportString, 32, 579);
 	
 	// fft
 	
 	ofSetColor(255);
 	ofPushMatrix();
-	ofTranslate(ofGetHeight() - 116, 16);
+	ofTranslate(ofGetWidth() - (256+16), ofGetHeight() - 116);
 	
 	soundMutex.lock();
 	drawBins = middleBins;
@@ -284,74 +287,74 @@ void hsApp::keyPressed  (int key)
 		soundStream.stop();
 	}
 	
-	if( key == 'q' )
+	if( key == 'a' )
 	{
 		numerator1--;
 		if( numerator1 < 1 ) numerator1 = 1;
 	}
 	
-	if( key == 'w' )
+	if( key == 'q' )
 	{
 		numerator1++;
 	}
 	
-	if( key == 'a' )
+	if( key == 's' )
 	{
 		denominator1--;
 		if( denominator1 < 1 ) denominator1 = 1;
 	}
 	
-	if( key == 's' )
+	if( key == 'w' )
 	{
 		denominator1++;
 	}
 	
-	if( key == 'i' )
+	if( key == 'd' )
 	{
 		numerator2--;
 		if( numerator2 < 1 ) numerator2 = 1;
 	}
 	
-	if( key == 'o' )
+	if( key == 'e' )
 	{
 		numerator2++;
 	}
 	
-	if( key == 'k' )
+	if( key == 'f' )
 	{
 		denominator2--;
 		if( denominator2 < 1 ) denominator2 = 1;
 	}
 	
-	if( key == 'l' )
+	if( key == 'r' )
 	{
 		denominator2++;
 	}
 	
 	int N_SHAPES = 3;
 	
-	if( key == 'e' )
+	if( key == 'y' )
 	{
 		shape1 = (shape1 + 1) % N_SHAPES;
 	}
-	if( key == 'd' )
+	if( key == 'h' )
 	{
 		shape2 = (shape2 + 1) % N_SHAPES;
 	}
-	if( key == 'c' )
+	if( key == 'n' )
 	{
 		shape3 = (shape3 + 1) % N_SHAPES;
 	}
 	
-	if( key == 'r' )
+	if( key == 'u' )
 	{
 		freeze1 = freeze1 ? 0 : 1;
 	}
-	if( key == 'f' )
+	if( key == 'j' )
 	{
 		freeze2 = freeze2 ? 0 : 1;
 	}
-	if( key == 'v' )
+	if( key == 'm' )
 	{
 		freeze3 = freeze3 ? 0 : 1;
 	}
