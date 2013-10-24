@@ -96,8 +96,8 @@ void hsApp::draw()
 {
 	ofBackground(34, 34, 34);
 	
-	int W = (ofGetWidth()-64.f)/2.f;
-	int H = 100;
+	int W = 256;
+	int H = 64;
 	
 	vector<ofVec3f>& verts = mesh.getVertices();
 	vector<ofFloatColor>& color = mesh.getColors();
@@ -116,7 +116,7 @@ void hsApp::draw()
 	}
 	
 	ofPushMatrix();
-	ofTranslate(32+W/2+ofGetWidth()/2, 450, 0);
+	ofTranslate(512, 528, 0);
 	ofRotateY(pan*360);
 	ofRotateX(rotator);
 	rotator += 0.1f;
@@ -126,8 +126,8 @@ void hsApp::draw()
 	//
 	
 	ofSetColor(225);
-	ofDrawBitmapString("HyperScope", 32, 32);
-	ofDrawBitmapString("press 'z' to unpause the audio, press 'x' to pause the audio", 32, 92);
+	ofDrawBitmapString("HyperScope", 64, 64);
+//	ofDrawBitmapString("press 'z' to unpause the audio, press 'x' to pause the audio", 32, 92);
 	
 	ofNoFill();
 
@@ -135,7 +135,7 @@ void hsApp::draw()
 	
 	ofPushStyle();
 	ofPushMatrix();
-	ofTranslate(32, 150, 0);
+	ofTranslate(64, 128, 0);
 	
 	for(vector<float>::size_type i = 0; i != voices.size(); i++)
 	{
@@ -145,7 +145,7 @@ void hsApp::draw()
 		ofDrawBitmapString("Voice " + ofToString(i+1), 4, 18);
 		
 		ofSetLineWidth(1);
-		ofRect(0, 0, W, H);
+		//ofRect(0, 0, W, H);
 		
 		ofSetColor(245, 58, 135);
 		ofBeginShape();
@@ -166,13 +166,13 @@ void hsApp::draw()
 	
 	ofPushStyle();
 	ofPushMatrix();
-	ofTranslate(32, 450, 0);
+	ofTranslate(64, 368, 0);
 	
 	ofSetColor(225);
 	ofDrawBitmapString("Output", 4, 18);
 	
 	ofSetLineWidth(1);
-	ofRect(0, 0, W, 100);
+	//ofRect(0, 0, W, 100);
 	
 	ofSetColor(245, 58, 135);
 	ofSetLineWidth(1);
@@ -181,7 +181,7 @@ void hsApp::draw()
 	for (unsigned int i = 0; i < voice3.size(); i++)
 	{
 		float x =  ofMap(i, 0, voice3.size(), 0, W, true);
-		ofVertex(x, 50 -(voice1[i]+voice2[i]+voice3[i])*80.0f);
+		ofVertex(x, H/2 -(voice1[i]+voice2[i]+voice3[i])*80.0f);
 	}
 	ofEndShape(false);
 	
@@ -192,7 +192,7 @@ void hsApp::draw()
 	
 	ofPushStyle();
 	ofPushMatrix();
-	ofTranslate(32+W/2+ofGetWidth()/2, 250, 0);
+	ofTranslate(512, 256, 0);
 	ofRotateY(pan*360);
 	ofRotateX(rotator);
 	
@@ -233,13 +233,13 @@ void hsApp::draw()
 	
 	ofSetColor(255);
 	ofPushMatrix();
-	ofTranslate(ofGetWidth() - (256+16), ofGetHeight() - 116);
+	ofTranslate(704, 128);
 	
 	soundMutex.lock();
 	drawBins = middleBins;
 	soundMutex.unlock();
 	
-	ofDrawBitmapString("Frequency Domain", 0, 0);
+	ofDrawBitmapString("Frequency Domain", 4, 18);
 	plot(drawBins, -plotHeight, plotHeight / 2);
 	ofPopMatrix();
 	//string msg = ofToString((int) ofGetFrameRate()) + " fps";
@@ -251,7 +251,7 @@ void hsApp::plot(vector<float>& buffer, float scale, float offset)
 {
 	ofNoFill();
 	int n = buffer.size()/2;
-	ofRect(0, 0, n, plotHeight);
+	//ofRect(0, 0, n, plotHeight);
 	glPushMatrix();
 	glTranslatef(0, plotHeight / 2 + offset, 0);
 	ofBeginShape();
