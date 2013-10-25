@@ -87,7 +87,7 @@ void hsApp::setup()
 	hwidthi = 256;
 	hwidthf = hwidthi;
 	
-	history.setMode(OF_PRIMITIVE_POINTS);
+	history.setMode(OF_PRIMITIVE_LINE_STRIP);
 	
 	for(int y = 0; y < hwidthi; y++ )
 	{
