@@ -5,6 +5,7 @@ void hsApp::setup()
 {
 	//ofBackground(34, 34, 34);
 	ofSetVerticalSync(true);
+	ofSetFrameRate(30);
 	
 	widthi = 512;
 	widthf = widthi;
@@ -24,7 +25,6 @@ void hsApp::setup()
 	
 	ofEnableDepthTest();
 	glEnable(GL_POINT_SMOOTH); // use circular points instead of square points
-	glPointSize(2); // make the points bigger
 	
 	// 2 output channels,
 	// 0 input channels
@@ -71,7 +71,7 @@ void hsApp::setup()
 	
 	soundStream.setup(this, 2, 0, sampleRate, bufferSize, 4);
 	
-	//
+	// fft
 	
 	plotHeight = 100;
 	
@@ -82,7 +82,25 @@ void hsApp::setup()
 	middleBins.resize(fft->getBinSize());
 	audioBins.resize(fft->getBinSize());
 	
-	ofSetFrameRate(30);
+	// history
+	
+	hwidthi = 256;
+	hwidthf = hwidthi;
+	
+	history.setMode(OF_PRIMITIVE_POINTS);
+	
+	for(int y = 0; y < hwidthi; y++ )
+	{
+		for(int x = 0; x < hwidthi; x++ )
+		{
+			ofFloatColor color(245.f/255.f, 58.f/255.f, 135.f/y,0.5);
+			history.addColor(color);
+			ofVec3f pos(x-hwidthf/2.f, y-hwidthf/2.f, 0);
+			history.addVertex(pos);
+		}
+	}
+	
+	historyIndex = 0;
 }
 
 
@@ -120,6 +138,7 @@ void hsApp::draw()
 	ofRotateY(pan*360);
 	ofRotateX(rotator);
 	rotator += 0.1f;
+	glPointSize(3);
 	mesh.draw();
 	ofPopMatrix();
 	
@@ -244,6 +263,30 @@ void hsApp::draw()
 	ofPopMatrix();
 	//string msg = ofToString((int) ofGetFrameRate()) + " fps";
 	//ofDrawBitmapString(msg, ofGetWidth() - 80, ofGetHeight() - 20);
+	
+	//
+	
+	vector<ofVec3f>& hverts = history.getVertices();
+	vector<ofFloatColor>& hcolor = history.getColors();
+	
+	int y = historyIndex++;
+	if( historyIndex >= hwidthi ) historyIndex = 0;
+	for(int x = 0; x < hwidthi; x++ )
+	{
+		int j = ofMap(x, 0, hwidthi, 0, drawBins.size()/2);
+		hverts[x + y*hwidthi].z = sqrt(drawBins[j]) * hwidthf;
+		hcolor[x + y*hwidthi].a = sqrt(drawBins[j]);
+	}
+	
+	ofPushMatrix();
+	ofTranslate(832, 512, 0);
+//	ofRotateY(180);
+	ofRotateX(75);
+//	ofRotateY(pan*360);
+	//rotator += 0.1f;
+	glPointSize(1);
+	history.draw();
+	ofPopMatrix();
 }
 
 //--------------------------------------------------------------

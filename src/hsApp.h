@@ -75,4 +75,10 @@ class hsApp : public ofBaseApp
 	
 	ofMutex soundMutex;
 	vector<float> drawBins, middleBins, audioBins;
+	
+	int		hwidthi;
+	float	hwidthf;
+	
+	ofMesh history;
+	int historyIndex;
 };
