@@ -93,7 +93,7 @@ void hsApp::setup()
 	{
 		for(int x = 0; x < hwidthi; x++ )
 		{
-			ofFloatColor color(245.f/255.f, 58.f/255.f, 135.f/y,0.5);
+			ofFloatColor color(245.f/255.f, 58.f/255.f, 135.f/255.f,y/255.f);
 			history.addColor(color);
 			ofVec3f pos(x-hwidthf/2.f, y-hwidthf/2.f, 0);
 			history.addVertex(pos);
@@ -101,6 +101,8 @@ void hsApp::setup()
 	}
 	
 	historyIndex = 0;
+	historyZBuffer.assign(hwidthi*hwidthi, 0);
+	historyCBuffer.assign(hwidthi*hwidthi, 0);
 }
 
 
@@ -269,18 +271,39 @@ void hsApp::draw()
 	vector<ofVec3f>& hverts = history.getVertices();
 	vector<ofFloatColor>& hcolor = history.getColors();
 	
+//	int y = historyIndex++;
+//	if( historyIndex >= hwidthi ) historyIndex = 0;
+//	for(int x = 0; x < hwidthi; x++ )
+//	{
+//		int j = ofMap(x, 0, hwidthi, 0, drawBins.size()/2);
+//		hverts[x + y*hwidthi].z = sqrt(drawBins[j]) * hwidthf;
+//		hcolor[x + y*hwidthi].a = sqrt(drawBins[j]);
+//	}
+	
 	int y = historyIndex++;
 	if( historyIndex >= hwidthi ) historyIndex = 0;
 	for(int x = 0; x < hwidthi; x++ )
 	{
 		int j = ofMap(x, 0, hwidthi, 0, drawBins.size()/2);
-		hverts[x + y*hwidthi].z = sqrt(drawBins[j]) * hwidthf;
-		hcolor[x + y*hwidthi].a = sqrt(drawBins[j]);
+		historyZBuffer[x + y*hwidthi] = sqrt(drawBins[j]) * hwidthf;
+		historyCBuffer[x + y*hwidthi] = sqrt(drawBins[j]);
+	}
+	
+	for(int y = 0; y < hwidthi; y++ )
+	{
+		for(int x = 0; x < hwidthi; x++ )
+		{
+			int bufferIndex = (historyIndex + y) % hwidthi;
+			hverts[x + y*hwidthi].z = historyZBuffer[x + bufferIndex*hwidthi];
+			hcolor[x + y*hwidthi].r = historyCBuffer[x + bufferIndex*hwidthi]*245.f/255.f;
+			hcolor[x + y*hwidthi].g = historyCBuffer[x + bufferIndex*hwidthi]*58.f/255.f;
+			hcolor[x + y*hwidthi].b = historyCBuffer[x + bufferIndex*hwidthi]*145.f/255.f;
+		}
 	}
 	
 	ofPushMatrix();
 	ofTranslate(832, 512, 0);
-//	ofRotateY(180);
+	ofRotateY(-45);
 	ofRotateX(75);
 //	ofRotateY(pan*360);
 	//rotator += 0.1f;

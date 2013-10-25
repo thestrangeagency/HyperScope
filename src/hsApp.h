@@ -80,5 +80,7 @@ class hsApp : public ofBaseApp
 	float	hwidthf;
 	
 	ofMesh history;
+	vector <float> historyZBuffer;
+	vector <float> historyCBuffer;
 	int historyIndex;
 };
