@@ -142,7 +142,7 @@ void hsApp::draw()
 		vector<float> voice = *voices[i];
 		
 		ofSetColor(225);
-		ofDrawBitmapString("Voice " + ofToString(i+1), 4, 18);
+		ofDrawBitmapString("Voice " + ofToString(i+1), 0, 16);
 		
 		ofSetLineWidth(1);
 		//ofRect(0, 0, W, H);
@@ -169,7 +169,7 @@ void hsApp::draw()
 	ofTranslate(64, 368, 0);
 	
 	ofSetColor(225);
-	ofDrawBitmapString("Output", 4, 18);
+	ofDrawBitmapString("Output", 0, 16);
 	
 	ofSetLineWidth(1);
 	//ofRect(0, 0, W, 100);
@@ -239,7 +239,7 @@ void hsApp::draw()
 	drawBins = middleBins;
 	soundMutex.unlock();
 	
-	ofDrawBitmapString("Frequency Domain", 4, 18);
+	ofDrawBitmapString("Frequency Domain", 0, 16);
 	plot(drawBins, -plotHeight, plotHeight / 2);
 	ofPopMatrix();
 	//string msg = ofToString((int) ofGetFrameRate()) + " fps";

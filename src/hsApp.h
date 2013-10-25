@@ -39,9 +39,11 @@ class hsApp : public ofBaseApp
 	float 	frequency;
 	float 	targetFrequency;
 	float 	phaseAdder;
+	
 	float 	phase1;
 	float 	phase2;
 	float 	phase3;
+	
 	int		shape1;
 	int		shape2;
 	int		shape3;
@@ -52,6 +54,7 @@ class hsApp : public ofBaseApp
 	
 	int		numerator1;
 	int		denominator1;
+	
 	int		numerator2;
 	int		denominator2;
 	
@@ -63,7 +66,7 @@ class hsApp : public ofBaseApp
 	ofEasyCam cam;
 	ofMesh mesh;
 	
-	//
+	// fft
 	
 	void plot(vector<float>& buffer, float scale, float offset);
 	int plotHeight;
