@@ -287,9 +287,10 @@ void hsApp::draw()
 		{
 			int bufferIndex = (historyIndex + y) % hwidthi;
 			hverts[x + y*hwidthi].z = historyZBuffer[x + bufferIndex*hwidthi];
-			hcolor[x + y*hwidthi].r = historyCBuffer[x + bufferIndex*hwidthi]*245.f/255.f;
-			hcolor[x + y*hwidthi].g = historyCBuffer[x + bufferIndex*hwidthi]*58.f/255.f;
-			hcolor[x + y*hwidthi].b = historyCBuffer[x + bufferIndex*hwidthi]*145.f/255.f;
+			//hcolor[x + y*hwidthi].r = historyCBuffer[x + bufferIndex*hwidthi]*245.f/255.f;
+			//hcolor[x + y*hwidthi].g = historyCBuffer[x + bufferIndex*hwidthi]*58.f/255.f;
+			//hcolor[x + y*hwidthi].b = historyCBuffer[x + bufferIndex*hwidthi]*145.f/255.f;
+			hcolor[x + y*hwidthi].a = (y/255.f)*historyCBuffer[x + bufferIndex*hwidthi];
 		}
 	}
 	
