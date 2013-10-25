@@ -103,6 +103,8 @@ void hsApp::setup()
 	historyIndex = 0;
 	historyZBuffer.assign(hwidthi*hwidthi, 0);
 	historyCBuffer.assign(hwidthi*hwidthi, 0);
+	
+	cam.enableOrtho();
 }
 
 
@@ -260,8 +262,7 @@ void hsApp::draw()
 	drawBins = middleBins;
 	soundMutex.unlock();
 	
-	ofDrawBitmapString("Frequency Domain", 0, 16);
-	plot(drawBins, -plotHeight, plotHeight / 2);
+	plot(drawBins, -plotHeight, 304+plotHeight / 2);
 	ofPopMatrix();
 	//string msg = ofToString((int) ofGetFrameRate()) + " fps";
 	//ofDrawBitmapString(msg, ofGetWidth() - 80, ofGetHeight() - 20);
@@ -270,15 +271,6 @@ void hsApp::draw()
 	
 	vector<ofVec3f>& hverts = history.getVertices();
 	vector<ofFloatColor>& hcolor = history.getColors();
-	
-//	int y = historyIndex++;
-//	if( historyIndex >= hwidthi ) historyIndex = 0;
-//	for(int x = 0; x < hwidthi; x++ )
-//	{
-//		int j = ofMap(x, 0, hwidthi, 0, drawBins.size()/2);
-//		hverts[x + y*hwidthi].z = sqrt(drawBins[j]) * hwidthf;
-//		hcolor[x + y*hwidthi].a = sqrt(drawBins[j]);
-//	}
 	
 	int y = historyIndex++;
 	if( historyIndex >= hwidthi ) historyIndex = 0;
@@ -301,15 +293,17 @@ void hsApp::draw()
 		}
 	}
 	
+	cam.begin();
+	ofScale(1,-1,1);
+	ofTranslate(832, -512);
+		
 	ofPushMatrix();
-	ofTranslate(832, 512, 0);
-	ofRotateY(-45);
-	ofRotateX(75);
-//	ofRotateY(pan*360);
-	//rotator += 0.1f;
+	ofRotateX(25);
 	glPointSize(1);
 	history.draw();
 	ofPopMatrix();
+	
+	cam.end();
 }
 
 //--------------------------------------------------------------
@@ -323,7 +317,7 @@ void hsApp::plot(vector<float>& buffer, float scale, float offset)
 	ofBeginShape();
 	for (int i = 0; i < n; i++)
 	{
-		ofVertex(i, sqrt(buffer[i]) * scale);
+		ofVertex(2*i, sqrt(buffer[i]) * scale);
 	}
 	ofEndShape();
 	glPopMatrix();
