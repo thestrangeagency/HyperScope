@@ -436,8 +436,8 @@ void hsApp::audioOut(float * output, int bufferSize, int nChannels)
 		for (int i = 0; i < bufferSize; i++)
 		{
 			phase1 += freeze1 ? 0 : phaseAdder;
-			phase2 += freeze2 ? 0 : phaseAdder*float(numerator1)/float(denominator1);
-			phase3 += freeze3 ? 0 : (phaseAdder*float(numerator1)/float(denominator1))*float(numerator2)/float(denominator2);
+			phase2 += freeze2 ? 0 : phaseAdder*float(denominator1)/float(numerator1);
+			phase3 += freeze3 ? 0 : (phaseAdder*float(denominator1)/float(numerator1))*float(denominator2)/float(numerator2);
 			
 			// sine wave
 			float sample1 = sin(phase1);
