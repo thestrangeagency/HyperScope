@@ -105,12 +105,17 @@ void hsApp::setup()
 	historyCBuffer.assign(hwidthi*hwidthi, 0);
 	
 	cam.enableOrtho();
+	
+	// player
+	
+	beat.loadSound("sound.mp3");
 }
 
 
 //--------------------------------------------------------------
 void hsApp::update()
 {
+	ofSoundUpdate();
 }
 
 //--------------------------------------------------------------
@@ -235,6 +240,7 @@ void hsApp::draw()
 	reportString += "\nchange ratios: 'q/a':'w/s', 'e/d':'r/f'";
 	reportString += "\nchange waveforms: 'y/h/n'";
 	reportString += "\nfreeze waveforms: 'u/j/m'";
+	reportString += "\ntoggle player: 'p'";
 	
 	ofDrawBitmapString(reportString, 32, 579);
 	
@@ -244,9 +250,22 @@ void hsApp::draw()
 	ofPushMatrix();
 	ofTranslate(704, 128);
 	
-	soundMutex.lock();
-	drawBins = middleBins;
-	soundMutex.unlock();
+	if( !player )
+	{
+		soundMutex.lock();
+		drawBins = middleBins;
+		soundMutex.unlock();
+	}
+	else
+	{
+		drawBins.clear();
+		int bands = 256;
+		float * fft = ofSoundGetSpectrum(bands);
+		for (int i = 0; i < bands; i++)
+		{
+			drawBins.push_back(fft[i]);
+		}
+	}
 	
 	plot(drawBins, -plotHeight, 304+plotHeight / 2);
 	ofPopMatrix();
@@ -401,6 +420,21 @@ void hsApp::keyPressed  (int key)
 	if( key == 'm' )
 	{
 		freeze3 = freeze3 ? 0 : 1;
+	}
+	
+	if( key == 'p' )
+	{
+		player = !player;
+		if( player )
+		{
+			soundStream.stop();
+			beat.play();
+		}
+		else
+		{
+			beat.stop();
+			soundStream.start();
+		}
 	}
 	
 }

@@ -65,6 +65,11 @@ class hsApp : public ofBaseApp
 	ofEasyCam cam;
 	ofMesh mesh;
 	
+	// player
+	
+	ofSoundPlayer beat;
+	bool player;
+	
 	// fft
 	
 	void plot(vector<float>& buffer, float scale, float offset);
