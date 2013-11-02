@@ -23,7 +23,6 @@ class hsApp : public ofBaseApp
 	
 	void audioOut(float * input, int bufferSize, int nChannels);
 	
-	
 	ofSoundStream soundStream;
 
 	float 	pan;

@@ -3,9 +3,10 @@
 //--------------------------------------------------------------
 void hsApp::setup()
 {
-	//ofBackground(34, 34, 34);
+	ofBackground(34, 34, 34);
 	ofSetVerticalSync(true);
 	ofSetFrameRate(30);
+	ofNoFill();
 	
 	widthi = 512;
 	widthf = widthi;
@@ -25,13 +26,7 @@ void hsApp::setup()
 	
 	ofEnableDepthTest();
 	glEnable(GL_POINT_SMOOTH); // use circular points instead of square points
-	
-	// 2 output channels,
-	// 0 input channels
-	// 44100 samples per second
-	// 512 samples per buffer
-	// 4 num buffers (latency)
-	
+		
 	int bufferSize		= 512;
 	sampleRate 			= 44100;
 	
@@ -69,6 +64,11 @@ void hsApp::setup()
 	//if you want to set the device id to be different than the default
 	//soundStream.setDeviceID(1); 	//note some devices are input only and some are output only
 	
+	// 2 output channels,
+	// 44100 samples per second
+	// 512 samples per buffer
+	// 4 num buffers (latency)
+
 	soundStream.setup(this, 2, 0, sampleRate, bufferSize, 4);
 	
 	// fft
@@ -115,11 +115,11 @@ void hsApp::update()
 
 //--------------------------------------------------------------
 void hsApp::draw()
-{
-	ofBackground(34, 34, 34);
-	
+{	
 	int W = 256;
 	int H = 64;
+	
+	// draw mesh
 	
 	vector<ofVec3f>& verts = mesh.getVertices();
 	vector<ofFloatColor>& color = mesh.getColors();
@@ -145,17 +145,10 @@ void hsApp::draw()
 	glPointSize(3);
 	mesh.draw();
 	ofPopMatrix();
-	
-	//
-	
-	ofSetColor(225);
-	ofDrawBitmapString("HyperScope", 64, 64);
-//	ofDrawBitmapString("press 'z' to unpause the audio, press 'x' to pause the audio", 32, 92);
-	
-	ofNoFill();
 
 	// draw voices
 	
+	ofSetLineWidth(1);
 	ofPushStyle();
 	ofPushMatrix();
 	ofTranslate(64, 128, 0);
@@ -166,11 +159,8 @@ void hsApp::draw()
 		
 		ofSetColor(225);
 		ofDrawBitmapString("Voice " + ofToString(i+1), 0, 16);
-		
-		ofSetLineWidth(1);
-		//ofRect(0, 0, W, H);
-		
 		ofSetColor(245, 58, 135);
+		
 		ofBeginShape();
 		for (unsigned int j = 0; j < voice.size(); j++)
 		{
@@ -193,12 +183,7 @@ void hsApp::draw()
 	
 	ofSetColor(225);
 	ofDrawBitmapString("Output", 0, 16);
-	
-	ofSetLineWidth(1);
-	//ofRect(0, 0, W, 100);
-	
 	ofSetColor(245, 58, 135);
-	ofSetLineWidth(1);
 	
 	ofBeginShape();
 	for (unsigned int i = 0; i < voice3.size(); i++)
@@ -220,7 +205,6 @@ void hsApp::draw()
 	ofRotateX(rotator);
 	
 	ofSetColor(245, 58, 135);
-	ofSetLineWidth(1);
 	
 	ofBeginShape();
 	for (unsigned int i = 0; i < voice3.size(); i++)
@@ -232,9 +216,11 @@ void hsApp::draw()
 	ofPopMatrix();
 	ofPopStyle();
 	
-	// draw info
+	// draw text info
 	
 	ofSetColor(225);
+	ofDrawBitmapString("HyperScope", 64, 64);
+	
 	string reportString = "volume: ("+ofToString(volume, 2)+") modify with -/+ keys\n";//pan: ("+ofToString(pan, 2)+") modify with mouse x\nsynthesis: ";
 	if( !bNoise )
 	{
@@ -264,10 +250,8 @@ void hsApp::draw()
 	
 	plot(drawBins, -plotHeight, 304+plotHeight / 2);
 	ofPopMatrix();
-	//string msg = ofToString((int) ofGetFrameRate()) + " fps";
-	//ofDrawBitmapString(msg, ofGetWidth() - 80, ofGetHeight() - 20);
 	
-	//
+	// fft history
 	
 	vector<ofVec3f>& hverts = history.getVertices();
 	vector<ofFloatColor>& hcolor = history.getColors();
@@ -312,7 +296,6 @@ void hsApp::plot(vector<float>& buffer, float scale, float offset)
 {
 	ofNoFill();
 	int n = buffer.size()/2;
-	//ofRect(0, 0, n, plotHeight);
 	glPushMatrix();
 	glTranslatef(0, plotHeight / 2 + offset, 0);
 	ofBeginShape();
